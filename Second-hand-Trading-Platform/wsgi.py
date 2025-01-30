@@ -1,5 +1,5 @@
 """
-WSGI config for ItemExchangePlatform project.
+WSGI config for Second-hand-Trading-Platform project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ItemExchangePlatform.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Second-hand-Trading-Platform.settings')
 
 application = get_wsgi_application()
