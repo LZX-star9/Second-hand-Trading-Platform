@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- 商品图片 -->
+        <div class="col-md-6">
+            <img src="{{ product.images.first.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+        </div>
+
+        <!-- 商品详情 -->
+        <div class="col-md-6">
+            <h2 class="fw-bold">{{ product.name }}</h2>
+            <p class="text-muted">Category: {{ product.category.name }}</p>
+            <h4 class="text-success">£{{ product.price }}</h4>
+            <p>{{ product.description }}</p>
+
+            <!-- 添加/移除收藏夹 -->
+{#            {% if user.is_authenticated %}#}
+{#                {% if product.wishlisted_by.filter(id=user.id).exists %}#}
+{#                    <a href="{% url 'users:remove_from_wishlist' product.id %}" class="btn btn-danger">❤️ Remove from Wishlist</a>#}
+{#                {% else %}#}
+{#                    <a href="{% url 'users:add_to_wishlist' product.id %}" class="btn btn-outline-primary">⭐ Add to Wishlist</a>#}
+{#                {% endif %}#}
+{#            {% else %}#}
+{#                <a href="{% url 'users:login' %}" class="btn btn-primary">Login to Add to Wishlist</a>#}
+{#            {% endif %}#}
+
+            <!-- 购买按钮 -->
+{#            <a href="{% url 'cart:add_to_cart' product.id %}" class="btn btn-success ms-2">🛒 Add to Cart</a>#}
+            <a class="btn btn-success ms-2">🛒 Add to Cart</a>
+        </div>
+    </div>
+
+    <!-- 相关商品推荐 -->
+    <div class="mt-5">
+        <h4 class="fw-bold">Related Products</h4>
+        <div class="row">
+            {% for related_product in related_products %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ related_product.images.first.image.url }}" class="card-img-top" alt="{{ related_product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ related_product.name }}</h5>
+                        <p class="text-success">£{{ related_product.price }}</p>
+                        <a href="{% url 'listings:product_detail' related_product.id %}" class="btn btn-outline-dark">View</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p>No related products found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

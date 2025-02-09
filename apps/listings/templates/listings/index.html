@@ -1,64 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>I-select</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        .navbar { background-color: #FFD700; }
-        .favorite-btn { background-color: yellow; border: none; padding: 5px 10px; border-radius: 15px; }
-        .favorite-sidebar { position: fixed; right: 10px; top: 150px; background-color: yellow; padding: 10px; border-radius: 5px; }
-        .product-image { height: 200px; object-fit: cover; width: 100%; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}View Location{% endblock %}
 
-<!-- 🔹 顶部导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
-        <a class="navbar-brand fw-bold fs-3" href="#">I-select</a>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-dark" type="submit">Search</button>
-        </form>
-        <div class="ms-auto d-flex align-items-center">
-            <span class="me-3">User Name</span>
-            <button class="btn btn-outline-dark">🔒 Logout</button>
-        </div>
-    </div>
-</nav>
-
-<!-- 🔹 商品列表 -->
-<div class="container mt-4">
-    <div class="row">
-        {% for item in items %}
-        <div class="col-md-4 mb-4">
-            <div class="card text-center">
-                {% if item.images.all %}
-                    <img src="{{ item.images.first.image.url }}" class="product-image card-img-top" alt="Product Image">
-                {% else %}
-                    <img src="https://via.placeholder.com/200" class="product-image card-img-top" alt="Placeholder">
-                {% endif %}
-                <div class="card-body">
-                    <h5>{{ item.title }}</h5>
-                    <p class="text-muted">Category: {{ item.get_category_display }}</p>
-                    <p>${{ item.price }}</p>
-                    <button class="favorite-btn">⭐ Add to my favorite</button>
-                    <p class="mt-2">{{ item.description }}</p>
+{% block main %}
+    <div class="container mt-4">
+        <div class="row">
+            {% for item in items %}
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center">
+                        {% if item.images.all %}
+                            <img src="{{ item.images.first.image.url }}" class="product-image card-img-top"
+                                 alt="Product Image">
+                        {% else %}
+                            <img src="https://via.placeholder.com/200" class="product-image card-img-top"
+                                 alt="Placeholder">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5>{{ item.title }}</h5>
+                            <p class="text-muted">Category: {{ item.get_category_display }}</p>
+                            <p>${{ item.price }}</p>
+                            <a class="favorite-btn" href="{% url 'users:add_to_wishlist' item.id %}">⭐ Add to my favorite</a>
+                            <p class="mt-2">{{ item.description }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
-
-<!-- 🔹 右侧侧边栏 -->
-<div class="favorite-sidebar">
-    <p><strong>My favorite</strong></p>
-    <p>Message</p>
-</div>
-
-</body>
-</html>
+{% endblock %}

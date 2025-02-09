@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}FlipFish{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 自定义 CSS -->
+    <style>
+        .navbar {
+            background-color: #FFD700;
+        }
+
+        .favorite-btn {
+            background-color: yellow;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .favorite-sidebar {
+            position: fixed;
+            right: 10px;
+            top: 150px;
+            background-color: yellow;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+</head>
+<body>
+
+<!-- 🔹 顶部导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-3" href="{% url 'listings:index' %}">FlipFish</a>
+
+        <!-- 🔍 搜索框 -->
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-dark" type="submit">Search</button>
+        </form>
+
+        <!-- 用户信息 -->
+        <div class="ms-auto d-flex align-items-center">
+            {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button"
+                       id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile Image" class="rounded-circle me-2"
+                                 width="40" height="40">
+                        {% else %}
+                            <img src="{% static 'image/default-avatar.jpg' %}" alt="Default Avatar"
+                                 class="rounded-circle me-2"
+                                 width="40" height="40">
+                        {% endif %}
+                        <span>{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="{% url 'users:profile' %}">👤 Profile</a></li>
+{#                        <li><a class="dropdown-item" href="{% url 'users:settings' %}">⚙️ Settings</a></li>#}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'users:logout' %}">🔒 Logout</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <a class="btn btn-outline-dark me-2" href="{% url 'users:login' %}">Login</a>
+                <a class="btn btn-dark" href="{% url 'users:register' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- 📌 主体内容 -->
+<main class="container bg-white p-4 rounded shadow-sm">
+    {% block main %}{% endblock %}
+</main>
+
+<!-- 🔹 右侧侧边栏 -->
+<div class="favorite-sidebar">
+    <img src="{% static 'image/favorite.png' %}" height="30">
+    <p href="{% url 'users:my_wishlist' %}"><strong>My favorite</strong></p>
+    <img src="{% static 'image/messenger.png' %}" height="30">
+    <p>Message</p>
+    <img src="{% static 'image/shopping-cart.png' %}" height="30">
+    <p>Cart</p>
+</div>
+
+<!-- ⚪️ 页脚 -->
+<footer class="py-3 bg-light text-center mt-5">
+    <p class="mb-0">© 2025 FlipFish. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

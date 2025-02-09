@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Login - FlipFish{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="text-center bg-warning py-3">
+        <h1 class="fw-bold">FlipFish <span class="fs-4">User Login</span></h1>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card p-4 shadow-sm" style="width: 400px;">
+            <h3 class="text-center mb-3">Password Login</h3>
+            
+            <form method="POST" action="{% url 'users:login' %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+
+                <div class="text-end">
+{#                    <a href="{% url 'users:password_reset' %}" class="text-decoration-none">Forget username/password?</a>#}
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 mt-3">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<accepted_lookup>
+users:login
+</accepted_lookup>
