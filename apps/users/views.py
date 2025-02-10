@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
@@ -117,10 +120,28 @@ def remove_from_wishlist(request, product_id):
     else:
         messages.warning(request, "This product is not in your wishlist.")
 
-    return redirect("listings:product_detail", product_id=product_id)
+    return redirect("users:my_wishlist")
 
 @login_required
 def my_wishlist(request):
     """ 显示用户的收藏夹 """
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related("product")
     return render(request, "my_wishlist.html", {"wishlist_items": wishlist_items})
+
+
+@login_required
+def add_to_favorite(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        product_id = data.get("product_id")
+        product = get_object_or_404(Product, id=product_id)
+
+        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+
+        if not created:
+            wishlist_item.delete()
+            return JsonResponse({"status": "removed"})
+
+        return JsonResponse({"status": "added"})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from apps.users.views import user_login, register, user_logout, profile_view, update_profile, add_to_wishlist, \
-    remove_from_wishlist, my_wishlist
+    remove_from_wishlist, my_wishlist, add_to_favorite
 
 app_name = 'users'
 
@@ -21,4 +21,5 @@ urlpatterns = [
     path("add/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),
     path("remove/<int:product_id>/", remove_from_wishlist, name="remove_from_wishlist"),
     path("my/", my_wishlist, name="my_wishlist"),
+    path('add_to_favorite/', add_to_favorite, name='add_to_favorite'),
 ]

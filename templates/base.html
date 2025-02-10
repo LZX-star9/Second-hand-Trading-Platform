@@ -37,10 +37,15 @@
             object-fit: cover;
             width: 100%;
         }
+
+        .main-layout-container {
+            display: flex;
+            flex-direction: row;
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
-    {% block extra_js %}{% endblock %}
+
 </head>
 <body>
 
@@ -49,9 +54,15 @@
     <div class="container">
         <a class="navbar-brand fw-bold fs-3" href="{% url 'listings:index' %}">FlipFish</a>
 
-        <!-- 🔍 搜索框 -->
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+{#        <!-- 🔍 搜索框 -->#}
+{#        <form class="d-flex">#}
+{#            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
+{#            <button class="btn btn-dark" type="submit">Search</button>#}
+{#        </form>#}
+        <!-- 搜索框 -->
+        <form method="GET" action="{% url 'listings:index' %}" class="d-flex mb-3">
+            <input class="form-control me-2" type="search" placeholder="Search products..." name="q"
+                   value="{{ request.GET.q }}">
             <button class="btn btn-dark" type="submit">Search</button>
         </form>
 
@@ -73,7 +84,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{% url 'users:profile' %}">👤 Profile</a></li>
-{#                        <li><a class="dropdown-item" href="{% url 'users:settings' %}">⚙️ Settings</a></li>#}
+                        {#                        <li><a class="dropdown-item" href="{% url 'users:settings' %}">⚙️ Settings</a></li>#}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -88,25 +99,31 @@
     </div>
 </nav>
 
-<!-- 📌 主体内容 -->
-<main class="container bg-white p-4 rounded shadow-sm">
-    {% block main %}{% endblock %}
-</main>
+<div class="main-layout-container">
+    {% block content %}{% endblock %}
+    <main class="container bg - white p - 4 rounded shadow - sm">
+        {% block main %}{% endblock %}
+    </main>
+</div>
 
 <!-- 🔹 右侧侧边栏 -->
 <div class="favorite-sidebar">
+    <img src="{% static 'image/add.png' %}" height="30">
+    <br>
+    <a href="{% url 'listings:new_product' %}" style="text-decoration: none;"><strong>Release</strong></a>
+    <br><br>
     <img src="{% static 'image/favorite.png' %}" height="30">
-    <p href="{% url 'users:my_wishlist' %}"><strong>My favorite</strong></p>
-    <img src="{% static 'image/messenger.png' %}" height="30">
-    <p>Message</p>
-    <img src="{% static 'image/shopping-cart.png' %}" height="30">
-    <p>Cart</p>
+    <br>
+    <a href="{% url 'users:my_wishlist' %}" style="text-decoration: none;"><strong>My favorite</strong></a>
+    <br><br>
+    <img src="{% static 'image/messenger.png' %}" height="30"><br>
+    <p>Message</p><br>
 </div>
 
 <!-- ⚪️ 页脚 -->
 <footer class="py-3 bg-light text-center mt-5">
     <p class="mb-0">© 2025 FlipFish. All rights reserved.</p>
 </footer>
-
+{% block extra_js %}{% endblock %}
 </body>
 </html>

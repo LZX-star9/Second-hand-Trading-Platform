@@ -12,7 +12,13 @@
     <div class="d-flex justify-content-center mt-4">
         <div class="card p-4 shadow-sm" style="width: 400px;">
             <h3 class="text-center mb-3">Password Login</h3>
-            
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        <p class="mb-0">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <form method="POST" action="{% url 'users:login' %}">
                 {% csrf_token %}
                 

@@ -1,15 +1,61 @@
 {% extends 'base.html' %}
 {% block title %}View Location{% endblock %}
 
+{% block content %}
+    <!-- 左侧筛选栏 -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+        <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <!-- 这里可以添加图标，暂时用占位符代替 -->
+            <span class="fs-4">Filter by Category</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="{% url 'listings:index' %}"
+                   class="nav-link {% if not request.GET.category %}active{% endif %}" aria-current="page">
+                    All Categories
+                </a>
+            </li>
+            {% for key, value in CATEGORY_CHOICES %}
+                <li class="nav-item">
+                    <a href="{% url 'listings:index' %}?category={{ key }}"
+                       class="nav-link {% if request.GET.category == key %}active{% endif %}">
+                        {{ value }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
 {% block main %}
     <div class="container mt-4">
+        <form method="GET" action="{% url 'listings:index' %}" class="mb-3">
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+            <input type="hidden" name="category" value="{{ request.GET.category }}">
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+                <option value="">Default</option>
+                <option value="price" {% if request.GET.sort == 'price' %}selected{% endif %}>Price (Low to High)
+                </option>
+                <option value="-price" {% if request.GET.sort == '-price' %}selected{% endif %}>Price (High to Low)
+                </option>
+                <option value="created_at" {% if request.GET.sort == 'created_at' %}selected{% endif %}>Newest First
+                </option>
+                <option value="-created_at" {% if request.GET.sort == '-created_at' %}selected{% endif %}>Oldest First
+                </option>
+                <option value="title" {% if request.GET.sort == 'title' %}selected{% endif %}>Title (A-Z)</option>
+                <option value="-title" {% if request.GET.sort == '-title' %}selected{% endif %}>Title (Z-A)</option>
+            </select>
+        </form>
         <div class="row">
             {% for item in items %}
                 <div class="col-md-4 mb-4">
                     <div class="card text-center">
                         {% if item.images.all %}
-                            <img src="{{ item.images.first.image.url }}" class="product-image card-img-top"
-                                 alt="Product Image">
+                            <a href="{% url "listings:product_detail" item.id %}"><img
+                                    src="{{ item.images.first.image.url }}" class="product-image card-img-top"
+                                    alt="Product Image"></a>
                         {% else %}
                             <img src="https://via.placeholder.com/200" class="product-image card-img-top"
                                  alt="Placeholder">
@@ -18,12 +64,45 @@
                             <h5>{{ item.title }}</h5>
                             <p class="text-muted">Category: {{ item.get_category_display }}</p>
                             <p>${{ item.price }}</p>
-                            <a class="favorite-btn" href="{% url 'users:add_to_wishlist' item.id %}">⭐ Add to my favorite</a>
+                            <a class="favorite-btn" href="{% url 'users:add_to_wishlist' item.id %}"
+                               style="text-decoration: none;">⭐ Add to my favorite</a>
                             <p class="mt-2">{{ item.description }}</p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+
+        <!-- 分页 -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if items.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page=1&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ items.previous_page_number }}&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ items.number }} of {{ items.paginator.num_pages }}</span>
+                </li>
+
+                {% if items.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ items.next_page_number }}&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ items.paginator.num_pages }}&category={{ request.GET.category }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
     </div>
 {% endblock %}
