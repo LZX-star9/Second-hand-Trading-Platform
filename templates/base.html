@@ -41,6 +41,7 @@
         .main-layout-container {
             display: flex;
             flex-direction: row;
+            margin-right: 120px;
         }
     </style>
     <script>
@@ -114,20 +115,23 @@
     <main class="container bg - white p - 4 rounded shadow - sm">
         {% block main %}{% endblock %}
     </main>
+
 </div>
 
 <!-- 🔹 右侧侧边栏 -->
 <div class="favorite-sidebar">
     <img src="{% static 'image/add.png' %}" height="30">
     <br>
-    <a href="{% url 'listings:new_product' %}" onclick="return checkLogin();" style="text-decoration: none;"><strong>Release</strong></a>
+    <a href="{% url 'listings:new_product' %}" onclick="return checkLogin();"
+       style="text-decoration: none;"><strong>Release</strong></a>
     <br><br>
     <img src="{% static 'image/favorite.png' %}" height="30">
     <br>
-    <a href="{% url 'users:my_wishlist' %}" onclick="return checkLogin();" style="text-decoration: none;"><strong>My favorite</strong></a>
+    <a href="{% url 'users:my_wishlist' %}" onclick="return checkLogin();" style="text-decoration: none;"><strong>My
+        favorite</strong></a>
     <br><br>
     <img src="{% static 'image/messenger.png' %}" height="30"><br>
-    <a href="" onclick="return checkLogin();" style="text-decoration: none;"><strong>Message</strong></a><br>
+    <a href="{% url 'messagings:chat' %}" onclick="return checkLogin();" style="text-decoration: none;"><strong>Message</strong></a><br>
 </div>
 
 <!-- ⚪️ 页脚 -->

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'storages',
+    'channels',
     'django_oss_storage',
     'apps.users',
     'apps.orders',
@@ -142,7 +142,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
-
+LOGIN_URL = '/user/login/'
 
 # Oss configuration
 OSS_ACCESS_KEY_ID = "LTAI5t7nXHJw43fjvWxVCQ4k"

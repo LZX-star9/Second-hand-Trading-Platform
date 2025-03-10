@@ -42,6 +42,11 @@
                     }
                 });
         }
+        {% if messages %}
+            {% for message in messages %}
+                    alert("{{ message }}");
+            {% endfor %}
+        {% endif %}
     </script>
 {% endblock %}
 {% block main %}
@@ -84,8 +89,7 @@
                 <a class="btn btn-primary">Buy It Now!</a>
 
                 <!-- 联系卖家 -->
-                <a href="{% url 'messages:chat_with_seller' product.seller.id %}" class="btn btn-outline-dark">
-                <a class="btn btn-outline-dark">
+                <a href="{% url 'messagings:chat_with_seller_product' product.seller.id product.id %}" class="btn btn-outline-dark">
                     Communicate with Seller
                 </a>
                 </a>
