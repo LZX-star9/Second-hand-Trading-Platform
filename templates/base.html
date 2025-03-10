@@ -43,7 +43,17 @@
             flex-direction: row;
         }
     </style>
-
+    <script>
+    function checkLogin() {
+        {% if not user.is_authenticated %}
+            alert("请先登录");
+            window.location.href = "{% url 'users:login' %}";
+            return false; // 阻止默认行为
+        {% endif %}
+        return true;
+    }
+    </script>
+    <!-- 自定义 CSS -->
     {% block extra_css %}{% endblock %}
 
 </head>
@@ -110,20 +120,21 @@
 <div class="favorite-sidebar">
     <img src="{% static 'image/add.png' %}" height="30">
     <br>
-    <a href="{% url 'listings:new_product' %}" style="text-decoration: none;"><strong>Release</strong></a>
+    <a href="{% url 'listings:new_product' %}" onclick="return checkLogin();" style="text-decoration: none;"><strong>Release</strong></a>
     <br><br>
     <img src="{% static 'image/favorite.png' %}" height="30">
     <br>
-    <a href="{% url 'users:my_wishlist' %}" style="text-decoration: none;"><strong>My favorite</strong></a>
+    <a href="{% url 'users:my_wishlist' %}" onclick="return checkLogin();" style="text-decoration: none;"><strong>My favorite</strong></a>
     <br><br>
     <img src="{% static 'image/messenger.png' %}" height="30"><br>
-    <p>Message</p><br>
+    <a href="" onclick="return checkLogin();" style="text-decoration: none;"><strong>Message</strong></a><br>
 </div>
 
 <!-- ⚪️ 页脚 -->
 <footer class="py-3 bg-light text-center mt-5">
     <p class="mb-0">© 2025 FlipFish. All rights reserved.</p>
 </footer>
+
 {% block extra_js %}{% endblock %}
 </body>
 </html>

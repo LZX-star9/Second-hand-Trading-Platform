@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-
+import django
+from django.core.files.storage import storages
+from django.utils.encoding import force_str
+django.utils.encoding.force_text = force_str
 # from django.conf.global_settings import MEDIA_ROOT
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'storages',
+    'django_oss_storage',
     'apps.users',
     'apps.orders',
     'apps.listings',
@@ -137,3 +142,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
+
+
+# Oss configuration
+OSS_ACCESS_KEY_ID = "LTAI5t7nXHJw43fjvWxVCQ4k"
+OSS_ACCESS_KEY_SECRET = "TpU4w1xEffQHSlfFP2hQw6MOCCixcp"
+OSS_ENDPOINT = "oss-eu-west-1.aliyuncs.com"
+OSS_BUCKET_NAME = "secondhead-plt-oss"
+
+DEFAULT_FILE_STORAGE = 'django_oss_storage.backends.OssMediaStorage'

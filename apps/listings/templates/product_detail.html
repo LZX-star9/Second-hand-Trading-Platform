@@ -84,9 +84,10 @@
                 <a class="btn btn-primary">Buy It Now!</a>
 
                 <!-- 联系卖家 -->
-{#                <a href="{% url 'chat_with_seller' product.seller.id %}" class="btn btn-outline-dark">#}
+                <a href="{% url 'messages:chat_with_seller' product.seller.id %}" class="btn btn-outline-dark">
                 <a class="btn btn-outline-dark">
                     Communicate with Seller
+                </a>
                 </a>
             </div>
         </div>

@@ -12,8 +12,8 @@ class User(AbstractUser):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # 账户余额
 
 class Review(models.Model):
-    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="given_reviews")
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_reviews")
+    reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="given_reviews",null=True)
+    seller = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="received_reviews",null=True)
     rating = models.IntegerField()  # 1-5星评分
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
