@@ -1,0 +1,33 @@
+{% extends "admin_panel/base_admin.html" %}
+{% block content %}
+<h2>Wishlist Management</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Product</th>
+            <th>Added At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for wishlist in wishlists %}
+        <tr>
+            <td>{{ wishlist.user.username }}</td>
+            <td>{{ wishlist.product.title }}</td>
+            <td>{{ wishlist.added_at }}</td>
+            <td>
+                <a href="{% url 'admin_panel:wishlist_delete' wishlist.id %}"
+                   onclick="return confirm('Delete this wishlist?')"
+                   class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">No wishlists found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

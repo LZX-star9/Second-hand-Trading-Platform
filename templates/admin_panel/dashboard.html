@@ -1,0 +1,39 @@
+{% extends "admin_panel/base_admin.html" %}
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<div class="row">
+    <!-- Users Card -->
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 shadow">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <p class="card-text display-4">{{ user_count }}</p>
+                <a href="{% url 'admin_panel:user_list' %}" class="btn btn-light btn-sm">Manage Users ➔</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Card -->
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow">
+            <div class="card-body">
+                <h5 class="card-title">Total Reviews</h5>
+                <p class="card-text display-4">{{ review_count }}</p>
+                <a href="{% url 'admin_panel:review_list' %}" class="btn btn-light btn-sm">Manage Reviews ➔</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlists Card -->
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3 shadow">
+            <div class="card-body">
+                <h5 class="card-title">Total Wishlists</h5>
+                <p class="card-text display-4">{{ wishlist_count }}</p>
+                <a href="{% url 'admin_panel:wishlist_list' %}" class="btn btn-light btn-sm">Manage Wishlists ➔</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

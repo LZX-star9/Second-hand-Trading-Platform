@@ -1,0 +1,35 @@
+{% extends "admin_panel/base_admin.html" %}
+{% block content %}
+<h2>Review Management</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Reviewer</th>
+            <th>Seller</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+        <tr>
+            <td>{{ review.reviewer.username }}</td>
+            <td>{{ review.seller.username }}</td>
+            <td>{{ review.rating }}</td>
+            <td>{{ review.comment|truncatechars:50 }}</td>
+            <td>
+                <a href="{% url 'admin_panel:review_delete' review.id %}"
+                   onclick="return confirm('Delete this review?')"
+                   class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No reviews found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
