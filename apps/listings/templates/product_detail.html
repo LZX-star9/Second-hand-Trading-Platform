@@ -9,7 +9,6 @@
             border: 2px solid #ddd;
             border-radius: 5px;
         }
-
         .main-img {
             width: 400px;
             height: 400px;
@@ -18,6 +17,7 @@
         }
     </style>
 {% endblock %}
+
 {% block extra_js %}
     <script>
         function changeMainImage(imageUrl) {
@@ -25,7 +25,7 @@
         }
 
         function toggleFavorite(productId) {
-            fetch("{% url 'users:add_to_favorite'%}", {
+            fetch("{% url 'users:add_to_favorite' %}", {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": "{{ csrf_token }}",
@@ -42,27 +42,40 @@
                     }
                 });
         }
-        {% if messages %}
-            {% for message in messages %}
-                    alert("{{ message }}");
-            {% endfor %}
-        {% endif %}
+
+        function confirmPurchase(productId) {
+            fetch("{% url 'listings:buy_now' product.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payment successful! 🎉");
+                    window.location.reload();  // 刷新页面
+                } else {
+                    alert("Insufficient balance. Redirecting to recharge...");
+                    window.location.href = "{% url 'users:recharge' %}";
+                }
+            });
+        }
     </script>
 {% endblock %}
+
 {% block main %}
     <div class="container mt-4">
         <div class="row">
-            <!-- 商品图片 -->
             <div class="col-md-6">
                 <div class="d-flex">
-                    <!-- 侧边缩略图 -->
                     <div class="d-flex flex-column me-3">
                         {% for image in product.images.all %}
                             <img src="{{ image.image.url }}" alt="Product Image" class="thumbnail-img mb-2"
                                  onclick="changeMainImage('{{ image.image.url }}')">
                         {% endfor %}
                     </div>
-                    <!-- 主图 -->
                     <div>
                         {% if product.images.all %}
                             <img id="mainImage" src="{{ product.images.first.image.url }}" class="main-img">
@@ -73,50 +86,40 @@
                 </div>
             </div>
 
-            <!-- 商品详情 -->
             <div class="col-md-6">
                 <h2>{{ product.title }}</h2>
                 <p><strong>Price:</strong> £{{ product.price }}</p>
                 <p>{{ product.description }}</p>
 
-                <!-- 收藏按钮 -->
                 <button id="favorite-btn" class="btn btn-outline-danger" onclick="toggleFavorite({{ product.id }})">
                     ❤ Add to Favorite
                 </button>
 
-                <!-- 购买按钮 -->
-{#                <a href="{% url 'buy_now' product.id %}" class="btn btn-primary">Buy It Now!</a>#}
-                <a class="btn btn-primary">Buy It Now!</a>
+                <button class="btn btn-primary" onclick="confirmPurchase({{ product.id }})">Buy It Now!</button>
 
-                <!-- 联系卖家 -->
-                <a href="{% url 'messagings:chat_with_seller_product' product.seller.id product.id %}" class="btn btn-outline-dark">
-                    Communicate with Seller
-                </a>
-                </a>
+                <a class="btn btn-outline-dark">Communicate with Seller</a>
             </div>
         </div>
     </div>
-
-    <!-- 相关商品推荐 -->
-    <div class="mt-5">
-        <h4 class="fw-bold">Related Products</h4>
-        <div class="row">
-            {% for related_product in related_products %}
-            <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ related_product.images.first.image.url }}" class="card-img-top" alt="{{ related_product.name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ related_product.name }}</h5>
-                        <p class="text-success">£{{ related_product.price }}</p>
-                        <a href="{% url 'listings:product_detail' related_product.id %}" class="btn btn-outline-dark">View</a>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-                <p>No related products found.</p>
-            {% endfor %}
-        </div>
-    </div>
+    <script>
+document.querySelector("#buy-now-btn").addEventListener("click", function() {
+    fetch("{% url 'listings:buy_now' product.id %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect_url;
+        } else {
+            alert(data.error || "Purchase failed.");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+</script>
 
 {% endblock %}
-

@@ -29,7 +29,7 @@ urlpatterns = [
     path('order/', include('apps.orders.urls')),
     path('payment/', include('apps.payments.urls')),
     path('message/', include('apps.messagings.urls')),
-
+    path('admin_panel/', include('admin_panel.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

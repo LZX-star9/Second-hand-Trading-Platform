@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 
 from .forms import NewListingForm
 # Create your views here.
@@ -21,7 +24,7 @@ def index(request):
     query = request.GET.get('q', None)
     sort_by = request.GET.get('sort', 'created_at')  # 默认按创建时间排序
 
-    products = Product.objects.all()
+    products = Product.objects.filter(is_sold=False)  # 只显示未售出的商品
 
     if category:
         products = products.filter(category=category)
@@ -34,7 +37,7 @@ def index(request):
         products = products.order_by(sort_by)
 
     # 分页
-    paginator = Paginator(products, 4)  # 每页9个商品
+    paginator = Paginator(products, 4)  # 每页4个商品
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -70,3 +73,34 @@ def new_product(request):
     else:
         form = NewListingForm()
     return render(request, "new_product.html", {"form": form})
+
+@login_required
+def buy_now(request, product_id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, id=product_id)
+        buyer = request.user
+        seller = product.seller
+
+        if buyer == seller:
+            return JsonResponse({"success": False, "error": "You cannot buy your own product."})
+
+        if buyer.balance >= product.price:
+            with transaction.atomic():
+                buyer.balance -= product.price
+                buyer.save()
+
+                seller.balance += product.price
+                seller.save()
+
+                product.is_sold = True
+                product.save()
+
+            return JsonResponse({
+                "success": True,
+                "redirect_url": reverse('listings:index')
+            })
+
+        else:
+            return JsonResponse({"success": False, "error": "Insufficient balance"})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

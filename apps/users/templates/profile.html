@@ -49,10 +49,13 @@
                        data-bs-target="#editProfileModal">Update</a></td>
             </tr>
             <tr>
-                <td><strong>Balance</strong></td>
-                <td>£ {{ user.balance }}</td>
-                <td></td>
-            </tr>
+    <td><strong>Balance</strong></td>
+    <td>£ {{ user.balance }}</td>
+    <td>
+        <a href="{% url 'users:recharge' %}" class="btn btn-success btn-sm">💰 Recharge</a>
+    </td>
+</tr>
+
             </tbody>
         </table>
 

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.listings',
     'apps.payments',
     'apps.messagings',
+    'admin_panel',
 ]
 
 MIDDLEWARE = [

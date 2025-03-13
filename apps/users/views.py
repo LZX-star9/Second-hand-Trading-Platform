@@ -13,7 +13,7 @@ from django.contrib.auth import logout
 from apps.listings.models import Product
 from apps.users.forms import  UserProfileUpdateForm
 from apps.users.models import User, Wishlist
-
+from decimal import Decimal
 
 def user_login(request):
     if request.method == "POST":
@@ -145,3 +145,24 @@ def add_to_favorite(request):
         return JsonResponse({"status": "added"})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+def recharge_view(request):
+    if request.method == "POST":
+        amount = request.POST.get("amount")
+
+        try:
+            amount = Decimal(amount)
+            if amount <= 0:
+                raise ValueError("Invalid amount")
+        except (ValueError, TypeError):
+            messages.error(request, "Please enter a valid amount.")
+            return redirect("users:recharge")
+
+
+        request.user.balance += amount
+        request.user.save()
+
+        messages.success(request, f"Successfully added £{amount} to your balance!")
+        return redirect("users:profile")  # 充值成功后跳转到 profile 页面
+
+    return render(request, "recharge.html")
