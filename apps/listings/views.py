@@ -8,7 +8,7 @@ from django.urls import reverse
 from .forms import NewListingForm
 # Create your views here.
 # apps/listings/views.py
-from .models import Product, ProductImage  # 导入商品模型
+from .models import Product, ProductImage
 from ..orders.models import Order
 from ..users.models import Wishlist, Review
 

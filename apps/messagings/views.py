@@ -3,8 +3,7 @@ from apps.users.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
-from django.contrib import messages as django_messages
+from django.http import JsonResponse
 from .models import Message
 from django.contrib import messages
 
