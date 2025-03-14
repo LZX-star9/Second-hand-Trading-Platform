@@ -9,6 +9,7 @@
             border: 2px solid #ddd;
             border-radius: 5px;
         }
+
         .main-img {
             width: 400px;
             height: 400px;
@@ -51,16 +52,18 @@
                     "Content-Type": "application/json",
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Payment successful! 🎉");
-                    window.location.reload();  // 刷新页面
-                } else {
-                    alert("Insufficient balance. Redirecting to recharge...");
-                    window.location.href = "{% url 'users:recharge' %}";
-                }
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Payment successful! The item will ship to you. \n " +
+                            "You can saw the order in your order page! 🎉\n" +
+                            "Remain in your account :"  + data.remain +" £");
+                        window.location.href = "{% url 'listings:index' %}";
+                    } else {
+                        alert("Insufficient balance. Redirecting to recharge...");
+                        window.location.href = "{% url 'users:recharge' %}";
+                    }
+                });
         }
     </script>
 {% endblock %}
@@ -88,6 +91,8 @@
 
             <div class="col-md-6">
                 <h2>{{ product.title }}</h2>
+                <p><strong>Seller:</strong> {{ product.seller.username }}</p>
+                <p><strong>Category:</strong> {{ product.category }}</p>
                 <p><strong>Price:</strong> £{{ product.price }}</p>
                 <p>{{ product.description }}</p>
 
@@ -101,25 +106,23 @@
             </div>
         </div>
     </div>
-    <script>
-document.querySelector("#buy-now-btn").addEventListener("click", function() {
-    fetch("{% url 'listings:buy_now' product.id %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirect_url;
-        } else {
-            alert(data.error || "Purchase failed.");
-        }
-    })
-    .catch(error => console.error("Error:", error));
-});
-</script>
+
+    <hr class="my-5">
+
+    <div class="container">
+        <h4>Seller's Reviews</h4>
+        {% if seller_reviews %}
+            {% for review in seller_reviews %}
+                <div class="border p-3 mb-3">
+                    <strong>{{ review.rating }} ★</strong> - {{ review.comment }}<br>
+                    <small class="text-muted">
+                        by @{{ review.reviewer.username }} on {{ review.created_at|date:"Y-m-d H:i" }}
+                    </small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No reviews for this seller yet.</p>
+        {% endif %}
+    </div>
 
 {% endblock %}

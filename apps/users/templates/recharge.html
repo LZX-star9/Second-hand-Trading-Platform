@@ -8,54 +8,44 @@
     <form method="POST" action="{% url 'users:recharge' %}" onsubmit="return validatePayment()">
     {% csrf_token %}
 
-    <!-- 充值金额 -->
      <div class="mb-3">
         <label for="amount" class="form-label">Amount (£)</label>
         <input type="number" class="form-control" name="amount" id="amount" min="1" required>
     </div>
 
-        <!-- 持卡人姓名 -->
         <div class="mb-3">
             <label for="card_name" class="form-label">Cardholder Name</label>
             <input type="text" class="form-control" name="card_name" id="card_name" placeholder="Full Name" required>
         </div>
 
-        <!-- 银行卡号 -->
         <div class="mb-3">
             <label for="card_number" class="form-label">Card Number</label>
             <input type="text" class="form-control" name="card_number" id="card_number" placeholder="1234 5678 9012 3456" maxlength="19" required>
         </div>
 
-        <!-- 有效日期 -->
         <div class="mb-3">
             <label for="expiry_date" class="form-label">Expiry Date (MM/YY)</label>
             <input type="text" class="form-control" name="expiry_date" id="expiry_date" placeholder="MM/YY" maxlength="5" required>
         </div>
 
-        <!-- 提交按钮 -->
         <button type="submit" class="btn btn-primary">Proceed to Payment</button>
     </form>
 </div>
 
-<!-- JavaScript 校验 -->
 <script>
 function validatePayment() {
-    // 获取表单数据
     const cardNumber = document.getElementById("card_number").value.replace(/\s+/g, '');
     const expiryDate = document.getElementById("expiry_date").value;
     const cardName = document.getElementById("card_name").value.trim();
 
-    // 验证持卡人姓名（不能为空）
     if (cardName === "") {
         alert("Cardholder name cannot be empty.");
         return false;
     }
 
-    // 验证银行卡号（Luhn算法校验）
-    if (!validateCardNumber(cardNumber)) {
-        alert("Invalid card number. Please check again.");
-        return false;
-    }
+    {#if (!validateCardNumber(cardNumber)) {#}
+    {#    alert("Invalid card number. Please check again.");#}
+    {#    return false;}#}
 
     // 验证有效日期（格式 MM/YY）
     if (!validateExpiryDate(expiryDate)) {
@@ -66,27 +56,26 @@ function validatePayment() {
     return true;
 }
 
-// Luhn 算法验证银行卡号
-function validateCardNumber(cardNumber) {
-    if (!/^\d{16}$/.test(cardNumber)) return false;
-
-    let sum = 0;
-    let alternate = false;
-
-    for (let i = cardNumber.length - 1; i >= 0; i--) {
-        let digit = parseInt(cardNumber[i], 10);
-
-        if (alternate) {
-            digit *= 2;
-            if (digit > 9) digit -= 9;
-        }
-
-        sum += digit;
-        alternate = !alternate;
-    }
-
-    return sum % 10 === 0;
-}
+{#function validateCardNumber(cardNumber) {#}
+{#    if (!/^\d{16}$/.test(cardNumber)) return false;#}
+{##}
+{#    let sum = 0;#}
+{#    let alternate = false;#}
+{##}
+{#    for (let i = cardNumber.length - 1; i >= 0; i--) {#}
+{#        let digit = parseInt(cardNumber[i], 10);#}
+{##}
+{#        if (alternate) {#}
+{#            digit *= 2;#}
+{#            if (digit > 9) digit -= 9;#}
+{#        }#}
+{##}
+{#        sum += digit;#}
+{#        alternate = !alternate;#}
+{#    }#}
+{##}
+{#    return sum % 10 === 0;#}
+{#}#}
 
 // 验证有效日期（MM/YY 格式，且不能是过去的时间）
 function validateExpiryDate(expiryDate) {

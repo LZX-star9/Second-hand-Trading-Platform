@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+    <h2>Order #{{ order.id }} - {{ order.status }}</h2>
+    <p>Buyer: @{{ order.buyer.username }}</p>
+    <p>Seller: @{{ order.product.seller.username }}</p>
+    <p>Placed on: {{ order.order_date|date:"Y-m-d H:i" }}</p>
+    <p>Total Price: £{{ order.total_price }}</p>
+
+    <hr>
+    <h4>Product Details</h4>
+    <div class="row">
+        <div class="col-md-4">
+            {% if order.product.images.first %}
+                <img src="{{ order.product.images.first.image.url }}" alt="Product Image" class="img-fluid rounded">
+            {% else %}
+                <img src="{% static 'image/default-product.jpg' %}" alt="No Image" class="img-fluid rounded">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h5>{{ order.product.title }}</h5>
+            <p>{{ order.product.description }}</p>
+            <p>Price: £{{ order.product.price }}</p>
+            <p>Category: {{ order.product.get_category_display }}</p>
+            <p>Posted on: {{ order.product.created_at|date:"Y-m-d H:i" }}</p>
+        </div>
+    </div>
+
+    <hr>
+    <div class="mb-3">
+        {% if order.status != "completed" and order.status != "canceled" %}
+            <!-- Only buyer can cancel -->
+            {% if order.buyer == request.user %}
+                <a href="{% url 'orders:cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
+            {% endif %}
+            {% if order.buyer == request.user or order.product.seller == request.user %}
+                <a href="{% url 'orders:complete_order' order.id %}" class="btn btn-success ms-2">Mark as Completed</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if show_review_popup %}
+        <div class="modal fade show" id="reviewModal" style="display:block;" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" action="{% url 'orders:submit_review' order.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Review the Seller</h5>
+                        <button type="button" class="btn-close" onclick="closeReviewModal()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="id_rating" class="form-label">Rating (1-5):</label>
+                        <label>
+                            <input type="number" name="rating" class="form-control" min="1" max="5" required>
+                        </label>
+
+                        <label for="id_comment" class="form-label mt-3">Comment:</label>
+                        <label>
+                            <textarea name="comment" class="form-control" rows="3"></textarea>
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+        <!-- background -->
+        <div class="modal-backdrop fade show" id="modalBg" style="display:block;"></div>
+
+        <script>
+            function closeReviewModal() {
+                document.getElementById("reviewModal").style.display = "none";
+                document.getElementById("modalBg").style.display = "none";
+            }
+        </script>
+
+    {% endif %}
+
+{% endblock %}

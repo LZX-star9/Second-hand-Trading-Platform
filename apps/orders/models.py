@@ -13,7 +13,7 @@ class Order(models.Model):
     ]
 
     buyer = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="orders")
-    product = models.OneToOneField('listings.Product', on_delete=models.CASCADE, related_name="order")
+    product = models.ForeignKey('listings.Product', on_delete=models.CASCADE, related_name="order")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     order_date = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)

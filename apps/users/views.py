@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
@@ -11,6 +12,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 
 from apps.listings.models import Product
+from apps.payments.models import Transaction
 from apps.users.forms import  UserProfileUpdateForm
 from apps.users.models import User, Wishlist
 from decimal import Decimal
@@ -40,12 +42,10 @@ def register(request):
         password1 = request.POST["password1"]
         password2 = request.POST["password2"]
 
-        # 确保两次密码一致
         if password1 != password2:
             messages.error(request, "Passwords do not match!")
             return render(request, "register.html")
 
-        # 检查用户名或手机号是否已存在
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists!")
             return render(request, "register.html")
@@ -54,7 +54,6 @@ def register(request):
             messages.error(request, "Phone number already registered!")
             return render(request, "register.html")
 
-        # 创建新用户
         user = User.objects.create_user(
             username=username,
             first_name=first_name,
@@ -70,12 +69,9 @@ def register(request):
 
     return render(request, "register.html")
 
-
-
 def user_logout(request):
     logout(request)  # 退出用户
     return redirect("listings:index")
-
 
 @login_required
 def profile_view(request):
@@ -146,6 +142,8 @@ def add_to_favorite(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+@transaction.atomic
+@login_required
 def recharge_view(request):
     if request.method == "POST":
         amount = request.POST.get("amount")
@@ -157,12 +155,16 @@ def recharge_view(request):
         except (ValueError, TypeError):
             messages.error(request, "Please enter a valid amount.")
             return redirect("users:recharge")
-
-
+        transectionction = Transaction.objects.create(
+            user=request.user,
+            amount=amount,
+            transaction_type="deposit"
+        )
+        transectionction.save()
         request.user.balance += amount
         request.user.save()
 
         messages.success(request, f"Successfully added £{amount} to your balance!")
-        return redirect("users:profile")  # 充值成功后跳转到 profile 页面
+        return redirect("users:profile")
 
     return render(request, "recharge.html")

@@ -6,17 +6,14 @@ app_name = 'admin_panel'
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
 
-    # 用户管理
     path('users/', views.user_list, name='user_list'),
     path('users/add/', views.user_add, name='user_add'),
     path('users/edit/<int:user_id>/', views.user_edit, name='user_edit'),
     path('users/delete/<int:user_id>/', views.user_delete, name='user_delete'),
 
-    # 评价管理
     path('reviews/', views.review_list, name='review_list'),
     path('reviews/delete/<int:review_id>/', views.review_delete, name='review_delete'),
 
-    # 心愿单管理
     path('wishlists/', views.wishlist_list, name='wishlist_list'),
     path('wishlists/delete/<int:wishlist_id>/', views.wishlist_delete, name='wishlist_delete'),
 ]

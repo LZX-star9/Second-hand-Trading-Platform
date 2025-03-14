@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="container mt-4 text-center">
+    <h1 class="display-4 text-danger">403 Forbidden</h1>
+    <p class="lead">You do not have permission to access this resource.</p>
+    <hr>
+    <p class="text-muted">If you believe this is an error, please contact support or go back to the previous page.</p>
+
+    <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+    <a href="{% url 'listings:index' %}" class="btn btn-primary">Return to Home</a>
+</div>
+{% endblock %}

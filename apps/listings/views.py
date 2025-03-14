@@ -9,6 +9,8 @@ from .forms import NewListingForm
 # Create your views here.
 # apps/listings/views.py
 from .models import Product, ProductImage  # 导入商品模型
+from ..orders.models import Order
+from ..users.models import Wishlist, Review
 
 CATEGORY_CHOICES = [
     ('electronics', 'Electronics'),
@@ -19,12 +21,11 @@ CATEGORY_CHOICES = [
     ('others', 'Others'),
 ]
 def index(request):
-    """ 商品列表视图，支持分类筛选、搜索、排序和分页 """
     category = request.GET.get('category', None)
     query = request.GET.get('q', None)
-    sort_by = request.GET.get('sort', 'created_at')  # 默认按创建时间排序
+    sort_by = request.GET.get('sort', 'created_at')
 
-    products = Product.objects.filter(is_sold=False)  # 只显示未售出的商品
+    products = Product.objects.filter(is_sold=False)
 
     if category:
         products = products.filter(category=category)
@@ -37,7 +38,7 @@ def index(request):
         products = products.order_by(sort_by)
 
     # 分页
-    paginator = Paginator(products, 4)  # 每页4个商品
+    paginator = Paginator(products, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -50,21 +51,22 @@ def index(request):
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
-    return render(request, "product_detail.html", {"product": product, "related_products": related_products})
+    seller = product.seller
+    reviews = Review.objects.filter(seller=seller)
+    return render(request, "product_detail.html", {"product": product, "related_products": related_products,"seller_reviews": reviews})
 
 
 @login_required
 def new_product(request):
     if request.method == "POST":
-        form = NewListingForm(request.POST)  # 这里不要传 `request.FILES`
-        files = request.FILES.getlist("images")  # 获取所有上传的图片
+        form = NewListingForm(request.POST)
+        files = request.FILES.getlist("images")
 
         if form.is_valid():
             product = form.save(commit=False)
-            product.seller = request.user  # 赋值当前用户
-            product.save()  # 先保存 Product
+            product.seller = request.user
+            product.save()
 
-            # 遍历所有上传的图片并保存
             for file in files:
                 ProductImage.objects.create(product=product, image=file)
 
@@ -87,17 +89,17 @@ def buy_now(request, product_id):
         if buyer.balance >= product.price:
             with transaction.atomic():
                 buyer.balance -= product.price
+                remain = buyer.balance
                 buyer.save()
-
-                seller.balance += product.price
-                seller.save()
-
                 product.is_sold = True
                 product.save()
+                Wishlist.objects.filter(user=buyer,product=product).delete()
+                Order.objects.create(buyer=buyer, product=product, total_price=product.price)
 
             return JsonResponse({
                 "success": True,
-                "redirect_url": reverse('listings:index')
+                "redirect_url": reverse('listings:index'),
+                "remain": remain
             })
 
         else:
