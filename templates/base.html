@@ -9,7 +9,7 @@
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <style>
 
         html, body {
@@ -128,13 +128,6 @@
     </div>
 </nav>
 
-{#<div class="main-layout-container">#}
-{#    {% block content %}{% endblock %}#}
-{#    <main class="container bg - white p - 4 rounded shadow - sm">#}
-{#        {% block main %}{% endblock %}#}
-{#    </main>#}
-{##}
-{#</div>#}
 
 <div class="content-wrapper">
     {% block content %}{% endblock %}

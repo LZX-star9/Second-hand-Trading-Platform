@@ -150,9 +150,12 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_URL = '/user/login/'
 
 # Oss configuration
+
+DEFAULT_FILE_STORAGE = 'django_oss_storage.backends.OssMediaStorage'
+
 OSS_ACCESS_KEY_ID = "LTAI5t7nXHJw43fjvWxVCQ4k"
 OSS_ACCESS_KEY_SECRET = "TpU4w1xEffQHSlfFP2hQw6MOCCixcp"
 OSS_ENDPOINT = "oss-eu-west-1.aliyuncs.com"
 OSS_BUCKET_NAME = "secondhead-plt-oss"
 
-DEFAULT_FILE_STORAGE = 'django_oss_storage.backends.OssMediaStorage'
+
