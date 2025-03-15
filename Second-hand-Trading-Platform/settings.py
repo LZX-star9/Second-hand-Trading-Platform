@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-rkd@r8k%sigqmw^52n6c!h2dejrjxu*e+^-un&7#9)+#5bu6!@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -151,11 +151,11 @@ LOGIN_URL = '/user/login/'
 
 # Oss configuration
 
-DEFAULT_FILE_STORAGE = 'django_oss_storage.backends.OssMediaStorage'
-
-OSS_ACCESS_KEY_ID = "LTAI5t7nXHJw43fjvWxVCQ4k"
-OSS_ACCESS_KEY_SECRET = "TpU4w1xEffQHSlfFP2hQw6MOCCixcp"
-OSS_ENDPOINT = "oss-eu-west-1.aliyuncs.com"
-OSS_BUCKET_NAME = "secondhead-plt-oss"
+# DEFAULT_FILE_STORAGE = 'django_oss_storage.backends.OssMediaStorage'
+#
+# OSS_ACCESS_KEY_ID = "LTAI5t7nXHJw43fjvWxVCQ4k"
+# OSS_ACCESS_KEY_SECRET = "TpU4w1xEffQHSlfFP2hQw6MOCCixcp"
+# OSS_ENDPOINT = "oss-eu-west-1.aliyuncs.com"
+# OSS_BUCKET_NAME = "secondhead-plt-oss"
 
 

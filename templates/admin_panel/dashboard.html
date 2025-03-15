@@ -4,7 +4,7 @@
 
 <div class="row">
     <!-- Users Card -->
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-white bg-primary mb-3 shadow">
             <div class="card-body">
                 <h5 class="card-title">Total Users</h5>
@@ -14,8 +14,19 @@
         </div>
     </div>
 
+    <!-- Products Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3 shadow">
+            <div class="card-body">
+                <h5 class="card-title">Total Products</h5>
+                <p class="card-text display-4">{{ product_count }}</p>
+                <a href="{% url 'admin_panel:product_list' %}" class="btn btn-light btn-sm">Manage Products ➔</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Reviews Card -->
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-white bg-success mb-3 shadow">
             <div class="card-body">
                 <h5 class="card-title">Total Reviews</h5>
@@ -26,7 +37,7 @@
     </div>
 
     <!-- Wishlists Card -->
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-white bg-warning mb-3 shadow">
             <div class="card-body">
                 <h5 class="card-title">Total Wishlists</h5>
