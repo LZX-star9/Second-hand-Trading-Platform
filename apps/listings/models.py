@@ -3,7 +3,6 @@ from django.db import models
 
 
 # Create your models here.
-# 记录交易双方、商品信息和状态
 class Product(models.Model):
     CATEGORY_CHOICES = [
         ('electronics', 'Electronics'),
@@ -25,7 +24,8 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
-#商品图片
+
+# product images
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="product_images/")

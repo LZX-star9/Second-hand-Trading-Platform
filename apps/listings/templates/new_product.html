@@ -2,31 +2,20 @@
 {% load static %}
 {% block extra_js %}
     <script>
-        // 获取文件输入框和图片预览容器元素
         const imageInput = document.getElementById('imageInput');
         const imagePreview = document.getElementById('imagePreview');
-        // 为文件输入框添加 change 事件监听器
         imageInput.addEventListener('change', function () {
-            // 清空之前的图片预览
             imagePreview.innerHTML = '';
-            // 遍历用户选择的所有文件
             for (let i = 0; i < this.files.length; i++) {
                 const file = this.files[i];
-                // 检查文件是否为图片类型
                 if (file.type.match('image.*')) {
                     const reader = new FileReader();
-                    // 当文件读取完成时触发该事件
                     reader.onload = function (e) {
-                        // 创建一个 img 元素
                         const img = document.createElement('img');
-                        // 设置 img 元素的 src 属性为读取到的图片数据
                         img.src = e.target.result;
-                        // 为 img 元素添加 Bootstrap 样式类
                         img.classList.add('col-md-4', 'mb-3', 'img-thumbnail');
-                        // 将 img 元素添加到图片预览容器中
                         imagePreview.appendChild(img);
                     };
-                    // 读取文件并转换为 DataURL 格式
                     reader.readAsDataURL(file);
                 }
             }
@@ -37,7 +26,6 @@
 {% block main %}
     <div class="container mt-5">
         <h2 class="fw-bold">Post a New Listing</h2>
-
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {% csrf_token %}
@@ -67,6 +55,5 @@
             <div id="imagePreview" class="row"></div>
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
-
     </div>
 {% endblock %}

@@ -57,7 +57,7 @@
                     if (data.success) {
                         alert("Payment successful! The item will ship to you. \n " +
                             "You can saw the order in your order page! 🎉\n" +
-                            "Remain in your account :"  + data.remain +" £");
+                            "Remain in your account :" + data.remain + " £");
                         window.location.href = "{% url 'listings:index' %}";
                     } else {
                         alert("Insufficient balance. Redirecting to recharge...");
@@ -66,6 +66,14 @@
                 });
         }
     </script>
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block main %}
@@ -102,7 +110,9 @@
 
                 <button class="btn btn-primary" onclick="confirmPurchase({{ product.id }})">Buy It Now!</button>
 
-                <a class="btn btn-outline-dark">Communicate with Seller</a>
+                <a class="btn btn-outline-dark"
+                   href="{% url 'messagings:chat_with_seller_product' product.seller.id product.id %}">Communicate with
+                    Seller</a>
             </div>
         </div>
     </div>

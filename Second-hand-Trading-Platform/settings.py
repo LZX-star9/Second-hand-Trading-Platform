@@ -132,6 +132,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+## Using this when deployment
+# MEDIA_URL = f"https://secondhead-plt-oss.oss-eu-west-1.aliyuncs.com/"
+# MEDIA_ROOT = ''
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
