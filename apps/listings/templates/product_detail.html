@@ -60,9 +60,16 @@
                             "Remain in your account :" + data.remain + " £");
                         window.location.href = "{% url 'listings:index' %}";
                     } else {
-                        alert("Insufficient balance. Redirecting to recharge...");
-                        window.location.href = "{% url 'users:recharge' %}";
+                        if (data.error === "You cannot buy your own product.") {
+                            alert("You cannot buy your own product.");
+                        } else if (data.error === "Insufficient balance") {
+                            alert("Insufficient balance. Redirecting to recharge...");
+                            window.location.href = "{% url 'users:recharge' %}";
+                        } else {
+                            alert(data.error);
+                        }
                     }
+
                 });
         }
     </script>

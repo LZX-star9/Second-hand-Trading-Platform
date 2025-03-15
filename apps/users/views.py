@@ -54,6 +54,11 @@ def register(request):
             messages.error(request, "Phone number already registered!")
             return render(request, "register.html")
 
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered!")
+            return render(request, "register.html")
+
+
         user = User.objects.create_user(
             username=username,
             first_name=first_name,
